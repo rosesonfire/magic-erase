@@ -1,0 +1,45 @@
+{
+  "name": "magic-erase",
+  "version": "0.0.1",
+  "description": "Clear blurry background in small close-focused images",
+  "main": "magicErase.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "standard && webpack-dev-server --content-base ./examples/app --config ./examples/bin/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rosesonfire/magic-erase.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rosesonfire/magic-erase/issues"
+  },
+  "keywords": [
+    "object-detection",
+    "close-up-image",
+    "close-focussed-image",
+    "blurred-background",
+    "image-processing",
+    "computer-vision",
+    "image-detection",
+    "object-isolation"
+  ],
+  "author": "rosesonfire",
+  "license": "MIT",
+  "homepage": "https://github.com/rosesonfire/magic-erase#readme",
+  "dependencies": {
+    "base64-stream": "^0.1.3",
+    "get-pixels": "^3.3.0",
+    "ndarray": "^1.0.18",
+    "save-pixels": "^2.3.4",
+    "stream-to-string": "^1.1.0"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-plugin": "^2.30.1",
+    "standard": "^10.0.3",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
+  }
+}
