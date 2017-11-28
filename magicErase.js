@@ -7,7 +7,7 @@ const _base64 = require('base64-stream')
 
 const validateStartingPoint = ([lenI, lenJ]) => (start) => {
   if (start[0] < 0 || start[0] >= lenI || start[1] < 0 || start[1] >= lenJ) {
-    throw new Error('point outside area')
+    throw new Error('Erase point is outside the image. Coordinates must be between 0 and 100.')
   }
 }
 const addToQueue = ([lenI, lenJ], condition) => (queue, states) => (source) =>
@@ -52,7 +52,7 @@ const createStates = ([lenI, lenJ]) => () => {
   }
   return states
 }
-const addNeighborsToQueue = (i, j, addToQueuePart) => {
+const addNeighborsToQueue = ([i, j], addToQueuePart) => {
   addToQueuePart(i - 1, j - 1)
   addToQueuePart(i - 1, j)
   addToQueuePart(i - 1, j + 1)
@@ -62,18 +62,20 @@ const addNeighborsToQueue = (i, j, addToQueuePart) => {
   addToQueuePart(i + 1, j)
   addToQueuePart(i + 1, j + 1)
 }
+const traversePoint = (f, addToQueuePart) => (res, point) => {
+  addNeighborsToQueue(point, addToQueuePart(point))
+  return f(res, point)
+}
 const traverse = (addToQueuePart1, validateStartingPointPart, crtStatesPart) =>
   (start) => {
     validateStartingPointPart(start)
     return (seed) => (f) => {
-      var res = seed
       const queue = [start]
       const addToQueuePart2 = addToQueuePart1(queue, crtStatesPart())
-      var i, j, top
+      const traversePointPart = traversePoint(f, addToQueuePart2)
+      var res = seed
       while (queue.length > 0) {
-        [i, j] = top = queue.splice(0, 1)[0]
-        res = f(res, top)
-        addNeighborsToQueue(i, j, addToQueuePart2(top))
+        res = traversePointPart(res, queue.splice(0, 1)[0])
       }
       return res
     }
