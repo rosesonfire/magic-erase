@@ -6,7 +6,7 @@
 [standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
 [standard-url]: https://standardjs.com
 
-Clear blurry background in close-focused images, by selecting click-points on the image. Works like the magic-wand tool in photoshop.
+Clear blurry background in close-focused images, by selecting click-points on the image. Works like the magic-wand tool in Photoshop.
 # Installation
 `npm install magic-erase`
 # Usage
@@ -35,24 +35,26 @@ var config = {
 var fs = require('fs')
 
 var firstPass = magicErase(config).then(function (response) {
-  // save base64Img as image file ...
+  // save erased result as image file ...
   var base64Img = response.base64Img
   fs.writeFile('object.jpg', base64Img, { encoding: 'base64' }, function() {
   	console.log('Saved object image')
   })
-  // use the data for a second erase pass
+  // use the erased result data for a second erase pass
   var data = response.data
   return data
 })
 ```
 ```
 var secondPass = firstPass.then(function(response) {
-  return magicErase({
+  var newConfig = {
     image: response,
     sensitivity: 48,
     erasePoints: [[8, 4], [65, 12]]
-  })
+  }
+  return magicErase(newConfig)
 }).then(function(response) {
+  // just like in the first pass
   var base64Img = response.base64Img
   // use base64Img ...
   return response.data
@@ -67,7 +69,7 @@ var secondPass = firstPass.then(function(response) {
 [magic-erase-console](https://github.com/rosesonfire/magic-erase-console) is a simple web console for the magic-erase package.
 # Examples
 Name|Image|AfterErasing|Sensitivity
--|-|-|-|-
+-|-|-|-
 Baseball|<img src="./examples/app/baseball.jpg" width="200" />|<img src="./examples/app/objects/baseball.jpg" width="200">|12.2
 Birb|<img src="./examples/app/birb.jpg" width="200" />|<img src="./examples/app/objects/birb.jpg" width="200">|77.9
 Cherry|<img src="./examples/app/cherry.jpg" width="200" />|<img src="./examples/app/objects/cherry.jpg" width="200">|55
