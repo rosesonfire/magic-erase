@@ -6,7 +6,7 @@
 [standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
 [standard-url]: https://standardjs.com
 
-Clear blurry background in close-focused images, by selecting click-points on the image. Works like the magic-wand tool in Photoshop.
+Clear blurry background in close-focused images, by selecting click-points on the image. Works like the magic-wand tool in Photoshopp.
 # Installation
 `npm install magic-erase`
 # Usage
@@ -37,8 +37,8 @@ var fs = require('fs')
 var firstPass = magicErase(config).then(function (response) {
   // save erased result as image file ...
   var base64Img = response.base64Img
-  fs.writeFile('object.jpg', base64Img, { encoding: 'base64' }, function() {
-  	console.log('Saved object image')
+  fs.writeFile('output-image.jpg', base64Img, { encoding: 'base64' }, function() {
+  	console.log('Saved output image')
   })
   // use the erased result data for a second erase pass
   var data = response.data

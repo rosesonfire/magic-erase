@@ -1,3 +1,4 @@
+const _getPixels = require('get-pixels')
 const _ndarray = require('ndarray')
 const _toString = require('stream-to-string')
 const _savePixels = require('save-pixels')
@@ -7,8 +8,16 @@ const _base64 = require('base64-stream')
 
 const validateStartingPoint = ([lenI, lenJ]) => (start) => {
   if (start[0] < 0 || start[0] >= lenI || start[1] < 0 || start[1] >= lenJ) {
-    throw new Error('Erase point is outside the image. Coordinates must be between 0 and 100.')
+    throw new Error('Erase point is outside the image. Coordinates must be ' +
+      'between 0 and 100.')
   }
+  return start
+}
+const validateSensitivity = (sensitivity) => {
+  if (sensitivity < 0.1 || sensitivity > 100) {
+    throw new Error('Sensitivity must be between 0.1 and 100.')
+  }
+  return sensitivity
 }
 const addToQueue = ([lenI, lenJ], condition) => (queue, states) => (source) =>
   (a, b) => {
@@ -67,18 +76,15 @@ const traversePoint = (f, addToQueuePart) => (res, point) => {
   return f(res, point)
 }
 const traverse = (addToQueuePart1, validateStartingPointPart, crtStatesPart) =>
-  (start) => {
-    validateStartingPointPart(start)
-    return (seed) => (f) => {
-      const queue = [start]
-      const addToQueuePart2 = addToQueuePart1(queue, crtStatesPart())
-      const traversePointPart = traversePoint(f, addToQueuePart2)
-      var res = seed
-      while (queue.length > 0) {
-        res = traversePointPart(res, queue.splice(0, 1)[0])
-      }
-      return res
+  (start) => (seed) => (f) => {
+    const queue = [validateStartingPointPart(start)]
+    const addToQueuePart2 = addToQueuePart1(queue, crtStatesPart())
+    const traversePointPart = traversePoint(f, addToQueuePart2)
+    var res = seed
+    while (queue.length > 0) {
+      res = traversePointPart(res, queue.splice(0, 1)[0])
     }
+    return res
   }
 const createRGBPixels = (setRGBPart) => (erasedPoints) =>
   foldLeft(erasedPoints)()((_, erasedPoint) => setRGBPart(erasedPoint))
@@ -121,18 +127,20 @@ const erase = (rgbPixels, erasePoints, minDiff, backColor, ndarray) =>
   foldLeft(erasePoints)(rgbPixels)((newRGBPixels, erasePoint) =>
     eraseFromPoint(erasePoint,
       createRGBPixels(setRGB(clonePixels(newRGBPixels, ndarray), backColor)),
-      traverse(addToQueue(newRGBPixels.shape,
-        withinSensitivity(getRGB(newRGBPixels), minDiff)),
+      traverse(
+        addToQueue(newRGBPixels.shape,
+          withinSensitivity(getRGB(newRGBPixels), minDiff)),
         validateStartingPoint(newRGBPixels.shape),
         createStates(newRGBPixels.shape))))
 
 // === API ===
 
 const magicErase = ({ image, erasePoints, sensitivity }) =>
-  initialize(image, require('get-pixels'))
+  initialize(image, _getPixels)
   .then((rgbPixels) =>
     erase(rgbPixels, getErasePoints(erasePoints, rgbPixels.shape),
-      getMinDiff(sensitivity), { r: 255, g: 255, b: 255 }, _ndarray))
+      getMinDiff(validateSensitivity(sensitivity)),
+      { r: 255, g: 255, b: 255 }, _ndarray))
   .then((rgbPixels) => saveImage(rgbPixels, _toString, _savePixels, _base64))
 
 module.exports = magicErase

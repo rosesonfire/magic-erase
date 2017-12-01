@@ -5,11 +5,12 @@
   "main": "magicErase.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "standard && webpack-dev-server --content-base ./examples/app --config ./examples/bin/webpack.config.js"
+    "start": "standard && webpack-dev-server --content-base ./examples/app --config ./examples/bin/webpack.config.js",
+    "prepack": "standard"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rosesonfire/magic-erase.git"
+    "url": "https://github.com/rosesonfire/magic-erase.git"
   },
   "bugs": {
     "url": "https://github.com/rosesonfire/magic-erase/issues"
@@ -23,7 +24,8 @@
     "image-processing",
     "computer-vision",
     "image-detection",
-    "object-isolation"
+    "object-isolation",
+    "image-editting"
   ],
   "author": "rosesonfire",
   "license": "MIT",

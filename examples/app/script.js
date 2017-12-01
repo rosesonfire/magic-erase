@@ -52,7 +52,8 @@ function refresh (erasePoints) {
     objectImg = document.querySelector('#object')
     objectImg.setAttribute('src', 'data:image/jpeg;base64,' + base64Img)
     history = history.splice(0, historyIndex)
-    history[historyIndex] = { base64Img: response.base64Img, data: response.data }
+    history[historyIndex] =
+      { base64Img: response.base64Img, data: response.data }
     historyIndex++
     if (historyIndex > 1) {
       document.querySelector('#undo').removeAttribute('disabled')
@@ -61,28 +62,31 @@ function refresh (erasePoints) {
   })
 }
 
-document.querySelector('#imgExamples').addEventListener('change', function (event) {
-  var imgInfo = this.value
-  var sensitivity
+document.querySelector('#imgExamples').addEventListener('change',
+  function (event) {
+    var imgInfo = this.value
+    var sensitivity
 
-  sensitivity = imgInfo.split('-')[1]
-  document.querySelector('#sensitivity').value = sensitivity
-  document.querySelector('#sensitivitySetter').value = sensitivity
-  refresh()
-})
+    sensitivity = imgInfo.split('-')[1]
+    document.querySelector('#sensitivity').value = sensitivity
+    document.querySelector('#sensitivitySetter').value = sensitivity
+    refresh()
+  })
 
-document.querySelector('#sensitivity').addEventListener('change', function (event) {
-  document.querySelector('#sensitivitySetter').value = this.value
-})
+document.querySelector('#sensitivity').addEventListener('change',
+  function (event) {
+    document.querySelector('#sensitivitySetter').value = this.value
+  })
 
-document.querySelector('#sensitivitySetter').addEventListener('change', function (event) {
-  if (this.value <= 0) {
-    this.value = 0.1
-  } else if (this.value > 100) {
-    this.value = 100
-  }
-  document.querySelector('#sensitivity').value = this.value
-})
+document.querySelector('#sensitivitySetter').addEventListener('change',
+  function (event) {
+    if (this.value <= 0) {
+      this.value = 0.1
+    } else if (this.value > 100) {
+      this.value = 100
+    }
+    document.querySelector('#sensitivity').value = this.value
+  })
 
 document.querySelector('#object').addEventListener('click', function (event) {
   var erasePoint
